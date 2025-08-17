@@ -1,24 +1,28 @@
-// server.js
 const express = require('express');
+const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+const detailsRoutes = require('./routes/detailsRoutes');
+const dotenv = require('dotenv');
+const connectDB = require('./mongoConnect');
+
+connectDB();
+
+dotenv.config();
+
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.json()); // Parse JSON requests
-app.use(express.static('public')); // Serve static files (HTML, CSS, JS)
+app.use(cors());
+app.use(bodyParser.json());
 
-// Basic route
-app.get('/', (req, res) => {
-  res.send('Balathon is running!');
-});
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/details', detailsRoutes );
 
-// Example API endpoint
-app.get('/api/data', (req, res) => {
-  res.json({ message: 'Hello from the server!' });
-});
-
-// Start server
-app.listen(PORT, () => {
+// Start Server
+const PORT = 5000;
+app.listen(PORT,'0.0.0.0', () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
